@@ -53,3 +53,7 @@ Be creative, don’t limit yourself to this definition and include everything yo
 
 **This case study is your presentation card. We will consider this code as the best work you can do.**
 
+# Bibliography.
+
+https://www.twilio.com/blog/get-started-docker-symfony
+https://niclastimmdev.com/building-api-with-symfony-and-php/
