@@ -20,7 +20,7 @@ class ApiController extends AbstractController
         $this->sellerRepository = $sellerRepository;
     }
 
-    #[Route('/new_seller', name:'new_seller')]
+    #[Route('/new_seller', name:'new_seller', methods:['POST'])]
     public function new_seller(Request $request): JsonResponse
     {
         return new JsonResponse(
@@ -31,7 +31,7 @@ class ApiController extends AbstractController
         );
     }
 
-    #[Route('/update_seller/{seller_id}', name: 'seller_id')]
+    #[Route('/update_seller/{seller_id}', name: 'seller_id', methods:['PUT'])]
     public function update_seller(Request $request, $seller_id): JsonResponse
     {
         // Get the seller.
@@ -55,7 +55,7 @@ class ApiController extends AbstractController
         return new JsonResponse(['status' => 'Seller updated!'], Response::HTTP_OK);
     }
 
-    #[Route('/remove_seller/{seller_id}', name: 'remove_seller')]
+    #[Route('/remove_seller/{seller_id}', name: 'remove_seller', methods:['DELETE'])]
     public function remove_seller($seller_id): JsonResponse
     {
         // Get the seller.

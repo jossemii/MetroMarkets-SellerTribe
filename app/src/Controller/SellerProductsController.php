@@ -24,7 +24,7 @@ class SellerProductsController extends AbstractController
         $this->sellerRepository = $sellerRepository;
     }
 
-    #[Route('/get_all_products', name: 'get_all_products')]
+    #[Route('/get_all_products', name: 'get_all_products', methods:['GET'])]
     public function get_all_products($id): JsonResponse
     {
         $seller = $this->sellerRepository->findOneBy(["id" => $id]);
@@ -40,6 +40,7 @@ class SellerProductsController extends AbstractController
         foreach ($products as $product)
         {
             $data[] = [
+                'id' => $product->getId(),
                 'name' => $product->getName(),
                 'width' => $product->getWidth(),
                 'price' => $product->getPrice()
@@ -49,7 +50,7 @@ class SellerProductsController extends AbstractController
         return new JsonResponse($data, Response::HTTP_OK);
     }
 
-    #[Route('/new_product', name: 'new_product')]
+    #[Route('/new_product', name: 'new_product', methods:['POST'])]
     public function new_product(Request $request, $id): JsonResponse
     {
         $seller = $this->sellerRepository->findOneBy(["id" => $id]);
@@ -61,7 +62,7 @@ class SellerProductsController extends AbstractController
         );
     }
 
-    #[Route('/update_product/{product_id}', name: 'update_product')]
+    #[Route('/update_product/{product_id}', name: 'update_product', methods:['PUT'])]
     public function update_product(Request $request, $id, $product_id): JsonResponse
     {
         // Get the product.
@@ -94,7 +95,7 @@ class SellerProductsController extends AbstractController
         return new JsonResponse(['status' => 'Product updated!'], Response::HTTP_OK);
     }
 
-    #[Route('/remove_product/{product_id}', name: 'remove_product')]
+    #[Route('/remove_product/{product_id}', name: 'remove_product', methods:['DELETE'])]
     public function remove_product($id, $product_id): JsonResponse
     {
         // Get the product.

@@ -57,3 +57,4 @@ Be creative, don’t limit yourself to this definition and include everything yo
 
 https://www.twilio.com/blog/get-started-docker-symfony
 https://niclastimmdev.com/building-api-with-symfony-and-php/
+https://www.itdo.com/blog/primeros-pasos-con-symfony-5-como-api-rest/
