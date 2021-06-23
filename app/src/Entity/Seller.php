@@ -3,6 +3,8 @@
 namespace App\Entity;
 
 use App\Repository\SellerRepository;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
@@ -28,14 +30,19 @@ class Seller
     private $country;
 
     /**
-     * @ORM\Column(type="integer")
+     * @ORM\Column(type="integer", nullable=true)
      */
     private $postal_code;
 
     /**
-     * @ORM\Column(type="string", length=255, nullable=true)
+     * @ORM\OneToMany(targetEntity=Product::class, mappedBy="seller", orphanRemoval=true)
      */
-    private $email;
+    private $products;
+
+    public function __construct()
+    {
+        $this->products = new ArrayCollection();
+    }
 
     public function getId(): ?int
     {
@@ -71,21 +78,39 @@ class Seller
         return $this->postal_code;
     }
 
-    public function setPostalCode(int $postal_code): self
+    public function setPostalCode(?int $postal_code): self
     {
         $this->postal_code = $postal_code;
 
         return $this;
     }
 
-    public function getEmail(): ?string
+    /**
+     * @return Collection|Product[]
+     */
+    public function getProducts(): Collection
     {
-        return $this->email;
+        return $this->products;
     }
 
-    public function setEmail(?string $email): self
+    public function addProduct(Product $product): self
     {
-        $this->email = $email;
+        if (!$this->products->contains($product)) {
+            $this->products[] = $product;
+            $product->setSeller($this);
+        }
+
+        return $this;
+    }
+
+    public function removeProduct(Product $product): self
+    {
+        if ($this->products->removeElement($product)) {
+            // set the owning side to null (unless already changed)
+            if ($product->getSeller() === $this) {
+                $product->setSeller(null);
+            }
+        }
 
         return $this;
     }

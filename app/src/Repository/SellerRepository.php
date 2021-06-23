@@ -5,6 +5,8 @@ namespace App\Repository;
 use App\Entity\Seller;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
+use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
+
 
 /**
  * @method Seller|null find($id, $lockMode = null, $lockVersion = null)
@@ -17,6 +19,29 @@ class SellerRepository extends ServiceEntityRepository
     public function __construct(ManagerRegistry $registry)
     {
         parent::__construct($registry, Seller::class);
+    }
+
+    public function saveSeller($data): int
+    {
+
+        # check if the request has a name.
+        if (empty($data['name'])){
+            throw new NotFoundHttpException("Expecting mandatory parameters!");
+        }
+
+        //create new seller obj.
+        $seller = new Seller();
+        $seller->setName($data["name"]);
+        $seller->setCountry($data['country'] ?: null);
+        $seller->setPostalCode($data['postal_code'] ?: null);
+
+        //instantiate the entity manager
+        $em = $this->getDoctrine()->getManager();
+        //save post to database
+        $em->persist($seller);
+        $em->flush();
+
+        return $seller['id'];
     }
 
     // /**

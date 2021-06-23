@@ -18,24 +18,25 @@ class Product
     private $id;
 
     /**
-     * @ORM\Column(type="string", length=255, nullable=true)
+     * @ORM\Column(type="string", length=255)
      */
     private $name;
 
     /**
-     * @ORM\Column(type="integer")
+     * @ORM\ManyToOne(targetEntity=seller::class, inversedBy="products")
+     * @ORM\JoinColumn(nullable=false)
+     */
+    private $seller;
+
+    /**
+     * @ORM\Column(type="integer", nullable=true)
      */
     private $width;
 
     /**
-     * @ORM\Column(type="smallint")
+     * @ORM\Column(type="integer")
      */
     private $price;
-
-    /**
-     * @ORM\Column(type="string", length=255, nullable=true)
-     */
-    private $description;
 
     public function getId(): ?int
     {
@@ -47,9 +48,21 @@ class Product
         return $this->name;
     }
 
-    public function setName(?string $name): self
+    public function setName(string $name): self
     {
         $this->name = $name;
+
+        return $this;
+    }
+
+    public function getSeller(): ?seller
+    {
+        return $this->seller;
+    }
+
+    public function setSeller(?seller $seller): self
+    {
+        $this->seller = $seller;
 
         return $this;
     }
@@ -59,7 +72,7 @@ class Product
         return $this->width;
     }
 
-    public function setWidth(int $width): self
+    public function setWidth(?int $width): self
     {
         $this->width = $width;
 
@@ -74,18 +87,6 @@ class Product
     public function setPrice(int $price): self
     {
         $this->price = $price;
-
-        return $this;
-    }
-
-    public function getDescription(): ?string
-    {
-        return $this->description;
-    }
-
-    public function setDescription(?string $description): self
-    {
-        $this->description = $description;
 
         return $this;
     }
