@@ -5,6 +5,7 @@ namespace App\Repository;
 use App\Entity\Seller;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
+use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
 
@@ -16,9 +17,10 @@ use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
  */
 class SellerRepository extends ServiceEntityRepository
 {
-    public function __construct(ManagerRegistry $registry)
+    public function __construct(ManagerRegistry $registry, EntityManagerInterface $manager)
     {
         parent::__construct($registry, Seller::class);
+        $this->manager = $manager;
     }
 
     public function saveSeller($data): int
@@ -32,16 +34,14 @@ class SellerRepository extends ServiceEntityRepository
         //create new seller obj.
         $seller = new Seller();
         $seller->setName($data["name"]);
-        $seller->setCountry($data['country'] ?: null);
-        $seller->setPostalCode($data['postal_code'] ?: null);
+        $seller->setCountry($data['country'] ?? null);
+        $seller->setPostalCode($data['postal_code'] ?? null);
 
-        //instantiate the entity manager
-        $em = $this->getDoctrine()->getManager();
-        //save post to database
-        $em->persist($seller);
-        $em->flush();
+        //save seller to database
+        $this->manager->persist($seller);
+        $this->manager->flush();
 
-        return $seller['id'];
+        return $seller->getId();
     }
 
     // /**

@@ -4,7 +4,9 @@ namespace App\Repository;
 
 use App\Entity\Product;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
+use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\Persistence\ManagerRegistry;
+use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
 /**
  * @method Product|null find($id, $lockMode = null, $lockVersion = null)
@@ -14,10 +16,34 @@ use Doctrine\Persistence\ManagerRegistry;
  */
 class ProductRepository extends ServiceEntityRepository
 {
-    public function __construct(ManagerRegistry $registry)
+    public function __construct(ManagerRegistry $registry, EntityManagerInterface $manager)
     {
         parent::__construct($registry, Product::class);
+        $this->manager = $manager;
     }
+
+    public function saveProduct($data): int
+    {
+
+        # check if the request has a name.
+        if (empty($data['name'])){
+            throw new NotFoundHttpException("Expecting mandatory parameters!");
+        }
+
+        //create new product obj.
+        $product = new Product();
+        $product->setName($data["name"]);
+        $product->setSeller($data["seller"]);
+        $product->setWidth($data['width'] ?? null);
+        $product->setPrice($data['price']);
+
+
+        //save product to database
+        $this->manager->persist($product);
+        $this->manager->flush();
+
+        return $product->getId();
+    } 
 
     // /**
     //  * @return Product[] Returns an array of Product objects

@@ -8,19 +8,19 @@ use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\JsonResponse;
 
-
 use App\Repository\SellerRepository;
 
+#[Route('/api', name:'api')]
 class ApiController extends AbstractController
 {
     private $sellerRepository;
 
     public function __construct(SellerRepository $sellerRepository)
     {
-        $this->$sellerRepository = $sellerRepository;
+        $this->sellerRepository = $sellerRepository;
     }
 
-    #[Route('/api/new_seller', name:'new_seller')]
+    #[Route('/new_seller', name:'new_seller')]
     public function new_seller(Request $request): JsonResponse
     {
         return new JsonResponse(
@@ -31,4 +31,3 @@ class ApiController extends AbstractController
         );
     }
 }
-?>
