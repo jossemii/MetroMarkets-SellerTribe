@@ -24,7 +24,6 @@ class ProductRepository extends ServiceEntityRepository
 
     public function saveProduct($data): int
     {
-
         # check if the request has a name.
         if (empty($data['name'])){
             throw new NotFoundHttpException("Expecting mandatory parameters!");
@@ -44,6 +43,21 @@ class ProductRepository extends ServiceEntityRepository
 
         return $product->getId();
     } 
+
+    public function updateProduct(Product $product): Product
+    {
+        //save product to database
+        $this->manager->persist($product);
+        $this->manager->flush();
+
+        return $product;
+    }
+
+    public function removeProduct($product)
+    {
+        $this->manager->remove($product);
+        $this->manager->flush();
+    }
 
     // /**
     //  * @return Product[] Returns an array of Product objects

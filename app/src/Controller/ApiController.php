@@ -30,4 +30,46 @@ class ApiController extends AbstractController
             Response::HTTP_CREATED
         );
     }
+
+    #[Route('/update_seller/{seller_id}', name: 'seller_id')]
+    public function update_seller(Request $request, $seller_id): JsonResponse
+    {
+        // Get the seller.
+        $seller = $this->sellerRepository->findOneBy(["id" => $seller_id]);
+
+        if (is_null($seller)){
+            return new JsonResponse(
+                ['status' => "The seller doesn't exists!"], 
+                Response::HTTP_NOT_FOUND
+            );
+        }
+
+        // Get the request data.
+        $data = json_decode($request->getContent(), true);
+        empty($data['name']) ? true : $seller->setName($data['name']);
+        empty($data['width']) ? true : $seller->setCountry($data['country']);
+        empty($data['price']) ? true : $seller->setPostalCode($data['postal_code']);
+
+        $this->sellerRepository->updateSeller($seller);
+
+        return new JsonResponse(['status' => 'Seller updated!'], Response::HTTP_OK);
+    }
+
+    #[Route('/remove_seller/{seller_id}', name: 'remove_seller')]
+    public function remove_seller($seller_id): JsonResponse
+    {
+        // Get the seller.
+        $seller = $this->sellerRepository->findOneBy(["id" => $seller_id]);
+        
+        if (is_null($seller)){
+            return new JsonResponse(
+                ['status' => "The seller doesn't exists!"], 
+                Response::HTTP_NOT_FOUND
+            );
+        }
+
+        $this->sellerRepository->removeSeller($seller);
+
+        return new JsonResponse(['status' => 'Seller deleted!'], Response::HTTP_OK);
+    }
 }

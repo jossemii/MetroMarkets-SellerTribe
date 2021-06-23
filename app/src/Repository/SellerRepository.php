@@ -44,6 +44,21 @@ class SellerRepository extends ServiceEntityRepository
         return $seller->getId();
     }
 
+    public function updateSeller(Seller $seller): Seller
+    {
+        //save product to database
+        $this->manager->persist($seller);
+        $this->manager->flush();
+
+        return $seller;
+    }
+
+    public function removeSeller($seller)
+    {
+        $this->manager->remove($seller);
+        $this->manager->flush();
+    }
+
     // /**
     //  * @return Seller[] Returns an array of Seller objects
     //  */

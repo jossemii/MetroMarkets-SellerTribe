@@ -28,6 +28,12 @@ class SellerProductsController extends AbstractController
     public function get_all_products($id): JsonResponse
     {
         $seller = $this->sellerRepository->findOneBy(["id" => $id]);
+        if (is_null($seller)){
+            return new JsonResponse(
+                ['status' => "The seller doesn't exists!"], 
+                Response::HTTP_NOT_FOUND
+            );
+        }
         $products = $seller->getProducts();
         $data = [];
 
@@ -39,19 +45,8 @@ class SellerProductsController extends AbstractController
                 'price' => $product->getPrice()
             ];
         }
-        
-        return new JsonResponse($data, Response::HTTP_OK);
-    }
 
-    #[Route('/get_info', name: 'get_info')]
-    public function get_info($id): Response
-    {
-        $seller = $this->sellerRepository->findOneBy(["id" => $id]);
-        return $this->json([
-            'name' => $seller->getName(),
-            'country' => $seller->getCountry(),
-            'postal_code' => $seller->getPostalCode()
-        ]);
+        return new JsonResponse($data, Response::HTTP_OK);
     }
 
     #[Route('/new_product', name: 'new_product')]
@@ -64,5 +59,65 @@ class SellerProductsController extends AbstractController
             )],
             Response::HTTP_CREATED
         );
+    }
+
+    #[Route('/update_product/{product_id}', name: 'update_product')]
+    public function update_product(Request $request, $id, $product_id): JsonResponse
+    {
+        // Get the product.
+        $product = $this->productRepository->findOneBy(["id" => $product_id]);
+
+        if (is_null($product)){
+            return new JsonResponse(
+                ['status' => "The product doesn't exists!"], 
+                Response::HTTP_NOT_FOUND
+            );
+        }
+
+        // Check if is the correct seller.
+        if ($id != $product->getSeller()->getId()) 
+        {
+            return new JsonResponse(
+                ['status' => "The seller doesn't have permissions!"], 
+                Response::HTTP_UNAUTHORIZED
+            );
+        }
+
+        // Get the request data.
+        $data = json_decode($request->getContent(), true);
+        empty($data['name']) ? true : $product->setName($data['name']);
+        empty($data['width']) ? true : $product->setWidth($data['width']);
+        empty($data['price']) ? true : $product->setPrice($data['price']);
+
+        $this->productRepository->updateProduct($product);
+
+        return new JsonResponse(['status' => 'Product updated!'], Response::HTTP_OK);
+    }
+
+    #[Route('/remove_product/{product_id}', name: 'remove_product')]
+    public function remove_product($id, $product_id): JsonResponse
+    {
+        // Get the product.
+        $product = $this->productRepository->findOneBy(["id" => $product_id]);
+        
+        if (is_null($product)){
+            return new JsonResponse(
+                ['status' => "The product doesn't exists!"], 
+                Response::HTTP_NOT_FOUND
+            );
+        }
+
+        // Check if is the correct seller.
+        if ($id != $product->getSeller()->getId()) 
+        {
+            return new JsonResponse(
+                ['status' => "The seller doesn't have permissions!"], 
+                Response::HTTP_UNAUTHORIZED
+            );
+        }
+
+        $this->productRepository->removeProduct($product);
+
+        return new JsonResponse(['status' => 'Product deleted!'], Response::HTTP_OK);
     }
 }
