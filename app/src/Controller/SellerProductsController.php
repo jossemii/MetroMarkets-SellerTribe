@@ -25,13 +25,22 @@ class SellerProductsController extends AbstractController
     }
 
     #[Route('/get_all_products', name: 'get_all_products')]
-    public function get_all_products($id): Response
+    public function get_all_products($id): JsonResponse
     {
         $seller = $this->sellerRepository->findOneBy(["id" => $id]);
-        return $this->json([
-            'message' => 'Welcome to your new controller!',
-            'path' => 'src/Controller/SellerProductsController.php',
-        ]);
+        $products = $seller->getProducts();
+        $data = [];
+
+        foreach ($products as $product)
+        {
+            $data[] = [
+                'name' => $product->getName(),
+                'width' => $product->getWidth(),
+                'price' => $product->getPrice()
+            ];
+        }
+        
+        return new JsonResponse($data, Response::HTTP_OK);
     }
 
     #[Route('/get_info', name: 'get_info')]
@@ -40,6 +49,8 @@ class SellerProductsController extends AbstractController
         $seller = $this->sellerRepository->findOneBy(["id" => $id]);
         return $this->json([
             'name' => $seller->getName(),
+            'country' => $seller->getCountry(),
+            'postal_code' => $seller->getPostalCode()
         ]);
     }
 
