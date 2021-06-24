@@ -23,10 +23,10 @@ class Product
     private $name;
 
     /**
-     * @ORM\ManyToOne(targetEntity=seller::class, inversedBy="products")
+     * @ORM\ManyToOne(targetEntity=Seller::class, inversedBy="products")
      * @ORM\JoinColumn(nullable=false)
      */
-    private $seller;
+    private $Seller;
 
     /**
      * @ORM\Column(type="integer", nullable=true)
@@ -55,14 +55,14 @@ class Product
         return $this;
     }
 
-    public function getSeller(): ?seller
+    public function getSeller(): ?Seller
     {
-        return $this->seller;
+        return $this->Seller;
     }
 
-    public function setSeller(?seller $seller): self
+    public function setSeller(?Seller $Seller): self
     {
-        $this->seller = $seller;
+        $this->Seller = $Seller;
 
         return $this;
     }

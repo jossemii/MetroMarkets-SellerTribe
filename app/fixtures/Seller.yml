@@ -1,0 +1,5 @@
+App\Entity\Seller:
+  Seller-0:
+    name: 'Juan'
+    country: 'Spain'
+    postal_code: 2345

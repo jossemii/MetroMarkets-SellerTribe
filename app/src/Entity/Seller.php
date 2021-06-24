@@ -35,7 +35,7 @@ class Seller
     private $postal_code;
 
     /**
-     * @ORM\OneToMany(targetEntity=Product::class, mappedBy="seller", orphanRemoval=true)
+     * @ORM\OneToMany(targetEntity=Product::class, mappedBy="Seller", orphanRemoval=true)
      */
     private $products;
 

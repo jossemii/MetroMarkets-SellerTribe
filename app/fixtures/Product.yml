@@ -1,0 +1,11 @@
+App\Entity\Product:
+  Product-0:
+    name: 'movil'
+    width: 5
+    price: 200
+    seller: '@Seller-0'
+  Product-1:
+    name: 'aspirador'
+    width: 14
+    price: 150
+    seller: '@Seller-0'
