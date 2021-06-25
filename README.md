@@ -52,9 +52,3 @@ You must update this repository with your solution. Let us know when it is ready
 Be creative, don’t limit yourself to this definition and include everything you think it could add value for you to be the chosen one.
 
 **This case study is your presentation card. We will consider this code as the best work you can do.**
-
-# Bibliography.
-
-https://www.twilio.com/blog/get-started-docker-symfony
-https://niclastimmdev.com/building-api-with-symfony-and-php/
-https://www.itdo.com/blog/primeros-pasos-con-symfony-5-como-api-rest/
