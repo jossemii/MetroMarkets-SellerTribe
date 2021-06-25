@@ -14,7 +14,6 @@ RUN curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local
 
 RUN curl -sS https://get.symfony.com/cli/installer | bash
 RUN mv /root/.symfony/bin/symfony /usr/local/bin/symfony
-#RUN symfony console make:migration \
-#    && symfony console doctrine:migrations:migrate \
-#    && symfony console doctrine:migrations:migrate --env=test \
-#    && php bin/console hautelook:fixtures:load
+RUN symfony console make:migration \
+    && symfony console doctrine:migrations:migrate \
+    && php bin/console hautelook:fixtures:load
